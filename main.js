@@ -1,52 +1,58 @@
+
 // Render
-Render = new THREE.WebGLRenderer();
-Render.setSize(800,600);
-document.getElementById('render').appendChild(Render.domElement); // Agregamos el Ojeto Render como un hijo del div render.
+var Render = new THREE.WebGLRenderer();
+var Escenario=new THREE.Scene();
+var Camara=new THREE.PerspectiveCamera();
+var Figura;
+var controls;
 
-// Escenario
-Escenario=new THREE.Scene();
+inicio();
+animacion1();
+function inicio(){
+    Render.setSize(800,600);
+    document.getElementById('render').appendChild(Render.domElement); // Agregamos el Ojeto Render como un hijo del div render.
+    Camara.position.z=100;  // Profundidadº
+    Escenario.add(Camara)  // Agregamos la camara al escenario
+    cargar_modelo();
+    controls=new THREE.OrbitControls(Camara,Render.domElement);
+}
+function cargar_modelo(){
+    Geometria= new THREE.Geometry();
+    let vertices=[
+        [2,7,0],
+        [7,2,0],
+        [12,7,0],
+        [12,17,0],
+        [7,12,0],
+        [2,17,0],
+        [2,7,0],
+        [2,7,2],
+        [7,2,2],
+        [12,7,2],
+        [12,17,2],
+        [7,12,2],
+        [2,17,2],
+        [2,7,2]
+    ]
+    vertices.forEach(element => {
+        x=element[0];
+        y=element[1];
+        z=element[2];
+        Vector= new THREE.Vector3(x,y,z);
+        Geometria.vertices.push(Vector);
+    });
+    Material= new THREE.ParticleBasicMaterial({color : 0xFF0000}); // Especificamos que el color sea Rojo
+    Figura=new THREE.Line(Geometria,Material);
+    Escenario.add(Figura);
+}
+    
+function animacion1(){
+    render_modelo();
+    requestAnimationFrame(animacion1);
+}
+function render_modelo() {
+    Figura.position.x=Figura.position.x+0.01;
+    controls.update(); // Linea innecesario?
+    Render.render(Escenario,Camara);
+}
 
-// Camara
-// La camara se puede decir lo que nuestro ojo podra ver  desde el navegador
-Camara=new THREE.PerspectiveCamera();
-Camara.position.z=100;  // Profundidad
-
-Escenario.add(Camara)  // Agregamos la camara al escenario
-
-
-// Geometria
-Geometria= new THREE.Geometry();
-// Vector= new THREE.Vector3(10,0,0);
-
-// Geometria.vertices.push(Vector); // Agregamos el vector al objeto Geometria, puesto que representara a un vertice.
-
-
-// // Agregamos al escenario el punto(vector)
-// Particula_material= new THREE.ParticleBasicMaterial({color : 0xFF0000}); // Especificamos que el color sea Rojo
-
-// Particula=new THREE.ParticleSystem(Geometria,Particula_material);
-
-// Escenario.add(Particula);
-
-// Render.render(Escenario,Camara);
-
-// Ejercicio 2 Puntos y lineas
-
-let vertices=[[2,7,0],[7,2,0],[12,7,0],[12,17,0],[7,12,0],[2,17,0],[2,7,0]]
-vertices.forEach(element => {
-    x=element[0];
-    y=element[1];
-    z=element[2];
-    Vector= new THREE.Vector3(x,y,z);
-    Geometria.vertices.push(Vector);
-});
-
-
-
-Particula_material= new THREE.ParticleBasicMaterial({color : 0xFF0000}); // Especificamos que el color sea Rojo
-
-Figura=new THREE.Line(Geometria,Particula_material);
-
-Escenario.add(Figura);
-
-Render.render(Escenario,Camara);
