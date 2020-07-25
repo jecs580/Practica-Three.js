@@ -22,8 +22,8 @@ function inicio(){
     Camara.position.z=100;  // Profundidadº
     Camara.position.y=10; 
     Escenario.add(Camara)  // Agregamos la camara al escenario
-    crear_plano();
-    cargar_modelo();
+    // crear_plano();
+    // cargar_modelo();
 
     controls=new THREE.OrbitControls(Camara,Render.domElement);
 }
@@ -59,7 +59,7 @@ function cargar_modelo(){
         amount:10, // Cantidad de profundidad
         bevelEnabled:false, //Booleano para activar Bisel
         bevelSegments:1, // Segmentos del Bisel
-        steps:10, // Profundidad y Num de segmentos de la profundidad
+        steps:100, // Profundidad y Num de segmentos de la profundidad
         bevelThickness:1 // Grosor del bisel
     }
     var extrude_geometria=new THREE.ExtrudeGeometry(forma_figura, datos_extrusion);
@@ -69,14 +69,15 @@ function cargar_modelo(){
     // textura.repeat.set(0.06,0.06);
     //repetir la textura de la figura
     // textura.wrapS = textura.wrapT = THREE.repeatWrapping;
-    var material = new THREE.MeshBasicMaterial({map:texture_figure,side:THREE.DoubleSide,wireframe:true});
+    var material = new THREE.MeshBasicMaterial({map:texture_figure,side:THREE.DoubleSide,wireframe:false});  // Con wireframe:false --> Especificamos que el material agarre completamente la textura. Si esta en true la textura solo se hara en los bordes de la geometria
     // Malla
     var mallextrusion=new THREE.Mesh(extrude_geometria,material);
     Material= new THREE.ParticleBasicMaterial({color : 0xFF0000}); // Especificamos que el color sea Rojo
     Figura=new THREE.Line(Geometria,Material);
     Escenario.add(Figura);
-    Escenario.add(mallextrusion);
-}   
+    Escenario.add(mallextrusion);   
+}
+$('#figura').click(function(){cargar_modelo();});
 function crear_plano() {
     Geometria_plano = new THREE.PlaneGeometry(100,100,10, 10 );  // width,height ,widthSegments ,heightSegments
     // Textura_plano = new THREE.ImageUtils.loadTexture("texturas/cesped.jpg");
@@ -90,12 +91,13 @@ function crear_plano() {
     Territorio.rotation.x=Math.PI/2;
     Escenario.add(Territorio);
 }
+$('#plano').click(function(params) {crear_plano();});
 function animacion1(){
     render_modelo();
     requestAnimationFrame(animacion1);
 }
 function render_modelo() {
-    Figura.rotation.y=Figura.rotation.y+0.01;
+    // Figura.rotation.y=Figura.rotation.y+0.01;
     controls.update(); // Linea innecesario?
     Render.render(Escenario,Camara);
 }
